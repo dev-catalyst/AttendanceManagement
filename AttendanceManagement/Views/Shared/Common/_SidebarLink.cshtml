@@ -1,0 +1,12 @@
+﻿@model AttendanceManagement.Models.ViewModel.SidebarLink
+<div class="menu-item py-2">
+    <a class="menu-link menu-center" href="@Model.Url" title="@Model.Title"
+       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
+       data-bs-placement="right">
+        <span class="menu-icon me-0">
+            <span class="svg-icon svg-icon-1">
+                <partial name="@Model.Icon"/>
+            </span>
+        </span>
+    </a>
+</div>

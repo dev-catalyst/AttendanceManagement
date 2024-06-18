@@ -1,0 +1,78 @@
+@using AttendanceManagement.Data
+@using AttendanceManagement.Models.ViewModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var role = UserManager.GetRolesAsync(user).Result.FirstOrDefault();
+
+    var adminSidebarLinks = new List<SidebarLink>()
+    {
+        new SidebarLink("Dashboard", "/", "Icons/_DashboardIcon"),
+        new SidebarLink("Teachers Management", "/Teachers", "Icons/_TeacherIcon"),
+        new SidebarLink("Departments Management", "/Departments", "Icons/_DepartmentIcon"),
+        new SidebarLink("Courses Management", "/Courses", "Icons/_CourseIcon"),
+        new SidebarLink("Batches Management", "/Batches", "Icons/_BatchIcon"),
+        new SidebarLink("Slots Management", "/Slots", "Icons/_SlotIcon"),
+        new SidebarLink("Users Management", "/App/Users", "Icons/_UserIcon"),
+        new SidebarLink("Tracking", "/Visitors", "Icons/_VisitorIcon"),
+        new SidebarLink("Rooms Management", "/Rooms", "Icons/_RoomIcon"),
+        new SidebarLink("TimeTable Viewer", "/TimeTable", "Icons/_TimetableIcon")
+    };
+    var studentSidebarLinks = new List<SidebarLink>()
+    {
+        new SidebarLink("Dashboard", "/", "Icons/_DashboardIcon"),
+        new SidebarLink("TimeTable Viewer", "/TimeTable", "Icons/_TimetableIcon")
+    };
+    var facultySidebarLinks = new List<SidebarLink>()
+    {
+        new SidebarLink("Dashboard", "/", "Icons/_DashboardIcon"),
+        new SidebarLink("Batches Management", "/Batches", "Icons/_BatchIcon"),
+        new SidebarLink("Slots Management", "/Slots", "Icons/_SlotIcon"),
+        new SidebarLink("Rooms Management", "/Rooms", "Icons/_RoomIcon"),
+        new SidebarLink("TimeTable Viewer", "/TimeTable", "Icons/_TimetableIcon")
+    };
+
+}
+<div id="kt_aside" class="aside aside-extended bg-white" data-kt-drawer="true" data-kt-drawer-name="aside"
+     data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true"
+     data-kt-drawer-width="auto" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_toggle">
+    <div class="aside-primary d-flex flex-column align-items-lg-center flex-row-auto">
+        <div class="aside-nav d-flex flex-column flex-lg-center flex-column-fluid w-100 py-5 px-3"
+             id="kt_aside_nav">
+            <div class="w-100 hover-scroll-overlay-y d-flex" id="kt_aside_menu_wrapper" data-kt-scroll="false"
+                 data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer"
+                 data-kt-scroll-wrappers="#kt_aside, #kt_aside_nav, #kt_aside_menu_wrapper"
+                 data-kt-scroll-offset="0px">
+                <div id="kt_aside_menu"
+                     class="menu menu-column menu-title-gray-600 menu-icon-gray-400 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-bold fs-5 my-auto"
+                     data-kt-menu="true">
+
+                    @if (role == "Admin")
+                    {
+                        foreach (var sidebarLink in adminSidebarLinks)
+                        {
+                            <partial name="Common/_SidebarLink" model="sidebarLink"/>
+                        }
+                    }
+
+                    @if (role == "Faculty")
+                    {
+                        foreach (var sidebarLink in facultySidebarLinks)
+                        {
+                            <partial name="Common/_SidebarLink" model="sidebarLink"/>
+                        }
+                    }
+                    
+                    @if (role == "Student")
+                    {
+                        foreach (var sidebarLink in studentSidebarLinks)
+                        {
+                            <partial name="Common/_SidebarLink" model="sidebarLink"/>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

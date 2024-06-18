@@ -1,0 +1,106 @@
+@model AttendanceManagement.Models.TimeTable.Course
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Create" id="CourseAddForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label class="required form-label">
+                    Choose Department
+                </label>
+                <select class="form-select form-select-solid" asp-for="DepartmentId" asp-items="ViewBag.DepartmentId" data-control="select2" data-placeholder="Select an Email" data-allow-clear="true">
+                </select>
+            </div>
+            <label class="form-label mt-5">Course Options</label>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Id
+                </label>
+                <input asp-for="Code" class="form-control-solid form-control"/>
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Name
+                </label>
+                <input asp-for="Name" class="form-control-solid form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label d-block">
+                    Description
+                </label>
+                <input asp-for="Description" class="form-control-solid form-control"/>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label d-block">
+                    Choose Semester
+                </label>
+                <input asp-for="Semester" class="form-control-solid  form-control kt_dialer_control"
+                       data-kt-dialer-control="input"
+                       data-kt-dialer="true"
+                       data-kt-dialer-min="0"
+                       data-kt-dialer-max="18"
+                       data-kt-dialer-step="1"/>
+                <span asp-validation-for="Semester" class="text-danger"></span>
+            </div>
+            <div class="pb-3 border-bottom-1 mb-3">
+                <span></span>
+            </div>
+            <div class="form-group mt-5 pt-3">
+                <button type="submit" class="btn btn-primary">
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path opacity="0.3" d="M3 13V11C3 10.4 3.4 10 4 10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14H4C3.4 14 3 13.6 3 13Z" fill="black"/>
+                            <path d="M13 21H11C10.4 21 10 20.6 10 20V4C10 3.4 10.4 3 11 3H13C13.6 3 14 3.4 14 4V20C14 20.6 13.6 21 13 21Z" fill="black"/>
+                        </svg>
+                    </span>
+                    Add Course
+                </button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script defer>
+    $("#CourseAddForm").submit( (e) => {
+        e.preventDefault();        
+        $.ajax({
+            url: $("#CourseAddForm").attr("action"),
+            type: "POST",
+            data: $("#CourseAddForm").serialize(),
+            success: function(data) {
+                if(data) {
+                    $('.modal').modal('hide')
+                    $('.modal-backdrop').remove()
+                    $("#TableReload").click()
+                    $("#inner-body-display").html("")
+                }
+            },
+            error: function(data) {
+                toastr.options.closeButton = true;
+                toastr.options.closeMethod = 'fadeOut';
+                toastr.options.closeDuration = 0;
+                toastr.options.showMethod = 'fadeIn';
+                toastr.options.hideMethod = 'fadeOut';
+                toastr.options.progressBar = true;
+                toastr.options.showEasing = 'swing';
+                toastr.options.hideEasing = 'swing';
+                toastr.options.duration = 500;
+                toastr.options.dublicateAllow = false;
+                toastr.error("Something went wrong", "Error", { timeOut: 1500 })
+
+            }
+        })
+    })
+    $('.form-select').select2()
+    new KTDialer(document.querySelector(".kt_dialer_control"));
+</script>

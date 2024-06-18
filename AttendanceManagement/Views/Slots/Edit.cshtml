@@ -1,0 +1,149 @@
+@model AttendanceManagement.Models.TimeTable.Slot
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Edit" id="SlotEditForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id"/>
+
+            <label class="form-label mt-5">Time Options</label>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Start
+                </label>
+                <input type="time" value='@Model.StartTime.ToString("hh:mm")' name="StartTime" id="StartTime" class="form-control-solid form-control"/>
+            </div>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    End
+                </label>
+                <input type="time" name="EndTime" value='@Model.EndTime.ToString("hh:mm")' id="EndTime" class="form-control-solid form-control"/>
+            </div>
+
+            <label class="form-label mt-5">Basic Options</label>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Teacher
+                </label>
+                <select class="form-select form-select-solid" asp-for="TeacherId" asp-items="ViewBag.TeacherId" data-control="select2" data-placeholder="Select a Teacher" data-allow-clear="true">
+                </select>
+                <span asp-validation-for="TeacherId" class="text-danger"></span>
+            </div>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Course
+                </label>
+                <select class="form-select form-select-solid" asp-for="CourseId" asp-items="ViewBag.CourseId" data-control="select2" data-placeholder="Select a Course" data-allow-clear="true">
+                </select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Room
+                </label>
+                <select class="form-select form-select-solid" asp-for="RoomId" asp-items="ViewBag.RoomId" data-control="select2" data-placeholder="Select a Course" data-allow-clear="true">
+                </select>
+                <span asp-validation-for="RoomId" class="text-danger"></span>
+            </div>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Day
+                </label>
+                <select class="form-select form-select-solid" id="Day" name="Day" data-control="select2" data-placeholder="Select a Day" data-allow-clear="true">
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>
+                    <option value="7">Sunday</option>
+                </select>
+                <span asp-validation-for="RoomId" class="text-danger"></span>
+            </div>
+
+
+            <label class="form-label mt-5">Other Options</label>
+
+            <div class="ms-2 my-3 user-select-none">
+                <label asp-for="Link" class="control-label form-label"></label>
+                <input asp-for="Link" class="form-control form-control-solid"/>
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>
+
+
+            <div class="pb-3 border-bottom-1 mb-3">
+                <span></span>
+            </div>
+            <div class="form-group mt-5 pt-3">
+                <button type="submit" class="btn btn-primary">
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path opacity="0.3" d="M3 13V11C3 10.4 3.4 10 4 10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14H4C3.4 14 3 13.6 3 13Z" fill="black"/>
+                            <path d="M13 21H11C10.4 21 10 20.6 10 20V4C10 3.4 10.4 3 11 3H13C13.6 3 14 3.4 14 4V20C14 20.6 13.6 21 13 21Z" fill="black"/>
+                        </svg>
+                    </span>
+                    Edit Slot
+                </button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script defer>
+    $("#SlotEditForm").submit( (e) => {
+        e.preventDefault();        
+        $.ajax({
+            url: $("#SlotEditForm").attr("action"),
+            type: "POST",
+            data: $("#SlotEditForm").serialize(),
+            success: function(data) {
+                if(data) {
+                    $('.modal').modal('hide')
+                    $('.modal-backdrop').remove()
+                    $("#TableReload").click()
+                    $("#inner-body-display").html("")
+                }
+            },
+            error: function(data) {
+                toastr.options.closeButton = true;
+                toastr.options.closeMethod = 'fadeOut';
+                toastr.options.closeDuration = 0;
+                toastr.options.showMethod = 'fadeIn';
+                toastr.options.hideMethod = 'fadeOut';
+                toastr.options.progressBar = true;
+                toastr.options.showEasing = 'swing';
+                toastr.options.hideEasing = 'swing';
+                toastr.options.duration = 500;
+                toastr.options.dublicateAllow = false;
+                toastr.error("Something went wrong", "Error", { timeOut: 1500 })
+
+            }
+        })
+    })
+    $('.form-select').select2()
+    
+    setTimeout(
+        () => {
+        $('.only-time').flatpickr({
+               enableTime: true,
+               noCalendar: true,
+               dateFormat: "h:i K",
+           });
+        },
+        500
+    )
+
+    
+</script>

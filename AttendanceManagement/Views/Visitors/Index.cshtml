@@ -1,0 +1,229 @@
+﻿@using AttendanceManagement.Models.ViewModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Visitors";
+    PageCardHeading pageCardHeading = new PageCardHeading
+    {
+        Heading = "Visitors",
+        Icon = "Icons/_VisitorIcon"
+    };
+}
+            <partial name="Common/_PageCardHeading" model="pageCardHeading"/>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+
+        <div class="card">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        @Html.Partial("Common/_SearchTextBox", "Visitor")
+                        <partial name="Common/_TableReload"/>
+                        <partial name="Common/_ExportButton"/>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected">
+
+                        <div class="fw-bolder me-5">
+                            <span class="me-2" data-kt-customer-table-select="selected_count"></span>Selected
+                        </div>
+                        <button type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Delete Selected</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0" id="TableContainer">
+                <table id="CustomDataTable" class="table align-middle table-row-dashed fs-6 gy-5">
+                    <thead>
+                    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                        <th>Day</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Ip Address</th>
+                        <th>Path</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-gray-600 fw-bold">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script defer>
+var KTDatatablesServerSide = function () {
+    // Shared variables
+    var table;
+    var dt;
+
+    // Private functions
+    var initDatatable = function () {
+        dt = $("#CustomDataTable").DataTable({
+            searchDelay: 200,
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            lengthMenu: [10, 25, 50, 100, 500, 1000,5000],
+            stateSave: true,
+            select: {
+                style: 'os',
+                selector: 'td:first-child',
+                className: 'row-selected'
+            },
+            ajax: {
+                url: "/Visitors/PageData",
+                type: "POST",
+            },
+            columns: [
+                { data: 'time'},
+                { data: 'time'},
+                { data: 'time'},
+                { data: 'ipAddress'},
+                { data: 'path'},
+                { data: 'users'},
+                { data: 'users.email'},
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: false,
+                    render: function (data) {
+                        try{
+                            var crrTime =   (new Date(data)).getDay();
+                            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        return `
+                                         ${days[crrTime]}
+                            `;
+                        } catch (e) {
+                            return "-";
+                        }
+    
+                    }
+                },
+                {
+                    targets: 1,
+                    orderable: false,
+                    render: function (data) {
+                        try{
+                            var crrTime =   new Date(data);
+                            
+                        return `
+                        ${crrTime.getDate()} - 
+                                       ${crrTime.getMonth() + 1} -   ${crrTime.getFullYear()}
+                            `;
+                        } catch (e) {
+                            return "-";
+                        }
+    
+                    }
+                },
+                {
+                    targets: 2,
+                    orderable: false,
+                    render: function (data) {
+                        try{
+                            var crrTime =   new Date(data);
+                            
+                        return `
+                                         ${crrTime.toLocaleTimeString("en-US")}
+                            `;
+                        } catch (e) {
+                            return "-";
+                        }
+
+                    }
+
+                    },
+                {
+                    targets: 5,
+                    orderable: false,
+                    render: function (data) {
+                        try{
+                            var firstName = data.firstName;
+                            var lastName = data.lastName;
+                            if (!firstName) {
+                                firstName = ""
+                            } 
+                            if (!lastName) {
+                                lastName = ""
+                            } 
+                        return `
+                                         ${firstName} ${lastName}
+                            `;
+                        } catch (e) {
+                            return "-";
+                        }
+
+                    }
+                },
+                {
+                    targets: 6,
+                    orderable: false,
+                    render: function (data) {
+                        try{
+                        return `
+                                         ${data}
+                            `;
+                        } catch (e) {
+                            return "-";
+                        }
+
+                    }
+                },
+            ],
+        });
+
+        table = dt.$;
+    }
+
+    // Public methods
+    return {
+        init: function () {
+            initDatatable();
+            handleSearchDatatable(dt);
+            handleResetForm(dt);
+            exportButtons(dt);
+        }
+    }
+}();
+
+function ShowEdit(email){
+    $.ajax({
+        url : `/Teachers/Edit?id=${email}`,
+        type : 'GET',
+        success : function(data){
+            $('#modal_edit_1').modal('show');
+            $('#inner-body-display-edit-1').html(data);
+        }
+    })
+}
+
+setTimeout(() => {
+    KTDatatablesServerSide.init();
+}, 100);
+
+
+</script>
+<script>
+
+    function AddTeacher(){
+        $.ajax({
+            url: "/Teachers/Create",
+            type: "GET",
+            success: function (result) {
+                $("#inner-body-display").html(result)
+                
+            },
+            error: function (xhr, status, error) {
+                alert(error);
+            }
+        })
+    }
+
+
+</script>

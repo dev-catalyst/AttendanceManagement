@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Update" id="BatchCourseUpdate">
+            <label class="form-label mt-5">Select Courses</label>
+            <input type="hidden" value="@ViewBag.BatchId" name="Batch" id="Batch"/>
+            @{
+                // loop in ViewBag.Courses
+                foreach (var course in ViewBag.Courses)
+                {
+                    var isChecked = false;
+                    if (ViewBag.selectedBatches.Count != 0)
+                    {
+                        for (var i = 0; i < ViewBag.selectedBatches.Count; i++)
+                        {
+                            if (course.Id == ViewBag.selectedBatches[i].CourseId)
+                            {
+                                isChecked = true;
+                                break;
+                            }
+                        }
+                        if (isChecked)
+                        {
+                            <div class="form-check form-switch ms-2 my-3">
+                                <input class="form-check-input" type="checkbox" name="@course.Id" role="switch" id="@course.Id" checked="checked">
+                                <label class="form-check-label" for="@course.Id">@course.Name</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-check form-switch ms-2 my-3">
+                                <input class="form-check-input" type="checkbox" name="@course.Id" role="switch" id="@course.Id">
+                                <label class="form-check-label" for="@course.Id">@course.Name</label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="form-check form-switch ms-2 my-3">
+                            <input class="form-check-input" type="checkbox" name="@course.Id" role="switch" id="@course.Id">
+                            <label class="form-check-label" for="@course.Id">@course.Name</label>
+                        </div>
+                    }
+                }
+            }
+            <div class="pb-3 border-bottom-1 mb-3">
+                <span></span>
+            </div>
+            <div class="form-group mt-5 pt-3">
+                <button type="submit" class="btn btn-primary">
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path opacity="0.3" d="M3 13V11C3 10.4 3.4 10 4 10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14H4C3.4 14 3 13.6 3 13Z" fill="black"/>
+                            <path d="M13 21H11C10.4 21 10 20.6 10 20V4C10 3.4 10.4 3 11 3H13C13.6 3 14 3.4 14 4V20C14 20.6 13.6 21 13 21Z" fill="black"/>
+                        </svg>
+                    </span>
+                    Update Batch
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    function AddSlotBatches(){
+        $.ajax({
+            url: "/SlotBatches/Create",
+            type: "GET",
+            success: function (result) {
+                $("#inner-body-display").html(result)
+            },
+            error: function (xhr, status, error) {
+                alert(error)
+            }
+        })
+    }
+
+    (function (){
+        const BatchCourseUpdate = document.getElementById("BatchCourseUpdate")
+            BatchCourseUpdate.addEventListener("submit", function (e) {
+                e.preventDefault()
+                const formData = new FormData(BatchCourseUpdate)
+                const data = Object.fromEntries(formData)
+                let newData = {}
+                newData.Batch = data.Batch
+                delete data.Batch
+                delete data.__RequestVerificationToken
+                newData.Courses = Object.keys(data)
+                $.ajax({
+                    url: "/BatchCourses/Update",
+                    type: "POST",
+                    data: newData,
+                    success: function (result) {
+                        $('.modal').modal('hide')
+                        $('.modal-backdrop').remove()
+                        $("#TableReload").click()
+                        $("#inner-body-display").html("")
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.options.closeButton = true;
+                        toastr.options.closeMethod = 'fadeOut';
+                        toastr.options.closeDuration = 0;
+                        toastr.options.showMethod = 'fadeIn';
+                        toastr.options.hideMethod = 'fadeOut';
+                        toastr.options.progressBar = true;
+                        toastr.options.showEasing = 'swing';
+                        toastr.options.hideEasing = 'swing';
+                        toastr.options.duration = 500;
+                        toastr.options.dublicateAllow = false;
+                        toastr.error("Something went wrong", "Error", { timeOut: 1500 })
+                    }
+                })
+            })
+        })();
+    
+
+</script>

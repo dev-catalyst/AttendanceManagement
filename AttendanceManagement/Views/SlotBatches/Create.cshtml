@@ -1,0 +1,69 @@
+@model AttendanceManagement.Models.TimeTable.SlotBatch
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-12 mb-7">
+        <form asp-action="Create" id="SlotBatchAddForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group d-none">
+                <label asp-for="SlotId" class="control-label"></label>
+                <select asp-for="SlotId" class="form-control" asp-items="ViewBag.SlotId"></select>
+            </div>
+            <div class="form-group">
+                <label for="BatchId" class="control-label"></label>
+                <select asp-for="BatchId" class="form-select form-select-solid w-100" asp-items="ViewBag.BatchId"></select>
+            </div>
+            <div class="form-group my-3 pt-5">
+                <input type="submit" value="Add Batch" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script defer>
+    $("#SlotBatchAddForm").submit( (e) => {
+        e.preventDefault();        
+        $.ajax({
+            url: $("#SlotBatchAddForm").attr("action"),
+            type: "POST",
+            data: $("#SlotBatchAddForm").serialize(),
+            success: function(data) {
+                if(data) {
+                    $('#modal_add_1').modal('hide')
+                    $("#inner-body-display").html("")
+                }
+            },
+            error: function(data) {
+                toastr.options.closeButton = true;
+                toastr.options.closeMethod = 'fadeOut';
+                toastr.options.closeDuration = 0;
+                toastr.options.showMethod = 'fadeIn';
+                toastr.options.hideMethod = 'fadeOut';
+                toastr.options.progressBar = true;
+                toastr.options.showEasing = 'swing';
+                toastr.options.hideEasing = 'swing';
+                toastr.options.duration = 500;
+                toastr.options.dublicateAllow = false;
+                toastr.error("Something went wrong", "Error", { timeOut: 1500 })
+            }
+        })
+    })
+    $('.form-select').select2()
+    
+    setTimeout(
+        () => {
+        $('.only-time').flatpickr({
+               enableTime: true,
+               noCalendar: true,
+               dateFormat: "h:i K",
+           });
+        },
+        500
+    )
+
+    
+</script>

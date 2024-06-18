@@ -1,0 +1,15 @@
+﻿@model AttendanceManagement.Models.ViewModel.DashboardCard
+<a href="@Model.Link" class="col-md-3 col-6 mx-md-4">
+    <div class="card card-xxl-stretch">
+        <div class="card-body d-flex flex-column justify-content-between h-100 pb-2">
+            <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom card-rounded-bottom h-60px w-100 mb-4 admin-card-dashboard-svg">
+                <partial name="@Model.Icon"/>
+            </div>
+            <div class="pb-4">
+                <h3 class="text-dark text-center fs-6 fs-md-4 fw-boldest line-height-lg">
+                    @Model.Heading
+                </h3>
+            </div>
+        </div>
+    </div>
+</a>

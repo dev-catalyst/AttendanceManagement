@@ -1,0 +1,65 @@
+@using AttendanceManagement.Models.ViewModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model AttendanceManagement.Models.TimeTable.Room
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageCardHeading pageCardHeading = new PageCardHeading
+    {
+        Heading = "Room - " + Model.Name,
+        Icon = "Icons/_RoomIcon"
+    };
+    DetailsHeaderCard detailsHeaderCard = new DetailsHeaderCard
+    {
+        Heading = "Rooms",
+        EditText = Model.Name,
+        Id = Model.Id,
+        EditLink = "/Rooms/Edit?id",
+        HomeLink = "/Rooms"
+    };
+}
+
+<partial name="Common/_PageCardHeading" model="pageCardHeading"/>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+        <div class="card">
+            <partial name="Common/_DetailsHeaderCard" model="detailsHeaderCard"/>
+            <div class="card-body pt-0">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Code)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.BuildingName)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.BuildingName)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Floor)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Floor)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

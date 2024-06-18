@@ -1,0 +1,240 @@
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+<input type="hidden" value="@ViewBag.SlotId" id="SlotId"/>
+<div class="mb-5">
+    <p>
+        <span class="svg-icon svg-icon-1 position-absolute ms-6 mt-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"/>
+                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"/>
+            </svg>
+        </span>
+        <input type="text" data-kt-customer-table-filter="search" id="TableSearchSlotBatch" class="form-control form-control-solid w-250px ps-15" placeholder="Search Slots"/>
+        <button type="button" id="TableReloadSlotBatch" class="btn btn-light-primary mx-3 my-4">
+            <span class="svg-icon svg-icon-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M17.1 15.8C16.6 15.7 16 16 15.9 16.5C15.7 17.4 14.9 18 14 18H6C4.9 18 4 17.1 4 16V8C4 6.9 4.9 6 6 6H14C15.1 6 16 6.9 16 8V9.4H18V8C18 5.8 16.2 4 14 4H6C3.8 4 2 5.8 2 8V16C2 18.2 3.8 20 6 20H14C15.8 20 17.4 18.8 17.9 17.1C17.9 16.5 17.6 16 17.1 15.8Z" fill="black"/>
+                    <path opacity="0.3" d="M11.9 9.39999H21.9L17.6 13.7C17.2 14.1 16.6 14.1 16.2 13.7L11.9 9.39999Z" fill="black"/>
+                </svg>
+            </span>
+            Reload
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_1" onclick="AddSlotBatches()">Add Batch</button>
+    </p>
+    <table id="SlotBatchTable" class="table align-middle table-row-dashed fs-6 gy-5">
+        <thead>
+        <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+            <th>Batch</th>
+            <th class="text-end min-w-100px">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="text-gray-600 fw-bold">
+        </tbody>
+    </table>
+
+</div>
+
+<script defer>
+var KTDatatablesServerSide = function () {
+    // Shared variables
+    var table;
+    var dt;
+
+    // Private functions
+    var initDatatable = function () {
+        dt = $("#SlotBatchTable").DataTable({
+            searchDelay: 200,
+            processing: true,
+            serverSide: true,
+            stateSave: true,
+            select: {
+                style: 'os',
+                selector: 'td:first-child',
+                className: 'row-selected'
+            },
+            ajax: {
+                url: "/SlotBatches/PageData",
+                type: "POST",
+            },
+            columns: [
+                { data: 'batch.name'},
+                { data: 'id' },
+            ],
+            columnDefs: [
+                {
+                     "defaultContent": "",
+                     "targets": "_all",
+                },
+                {
+                    targets: [0],
+                    render: function (data) {
+                        try {
+                            return data;
+                        } catch (e) {
+                            return " ";
+                        }                          
+                    }
+                }, 
+                {
+                    targets: -1,
+                    data: null,
+                    orderable: false,
+                    className: 'text-end',
+                    render: function (data, type, row) {
+                        try{
+                            return `
+                            <a href="javascript:void(0);" id="${data}" data-kt-docs-table-filter="delete_row" class="btn btn-light btn-active-light-primary btn-sm" >
+                                Delete
+                            </a>
+                        `;
+                        }
+                        catch (e) {
+                            return "-";
+                        }
+                    },
+                },
+            ],
+        });
+
+        table = dt.$;
+
+        // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+        dt.on('draw', function () {
+            handleDeleteRows();
+            KTMenu.createInstances();
+        });
+    }
+
+    var handleDeleteRows = () => {
+        // Select all delete buttons
+        const deleteButtons = document.querySelectorAll('[data-kt-docs-table-filter="delete_row"]');
+
+        deleteButtons.forEach(d => {
+            // Delete button on click
+            d.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Select parent row
+                const parent = e.target.closest('tr');
+
+                // Get customer name
+                const customerName = parent.querySelectorAll('td')[0].innerText;
+
+                // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                Swal.fire({
+                    text: "Are you sure you want to remove " + customerName + "?",
+                    icon: "error",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes, delete!",
+                    cancelButtonText: "No, cancel",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-active-light-primary"
+                    }
+                }).then(function (result) {
+                    if (result.value) {
+                        const dataSelect = parent.querySelectorAll('td')[1].querySelectorAll('a')[0].id
+                        $.ajax({
+                            url: `/SlotBatches/DeleteSlotBatch`,
+                            data: {
+                                id: dataSelect
+                            },
+                            type : "Delete",
+                            success: function (result) {
+                                if (result) {
+                                     dt.row(parent).remove().draw();
+                                     $('.modal').modal('hide')
+                                     $('.modal-backdrop').remove()
+                                     $('#inner-body-display-edit-1').html('')
+                                }
+                            },
+                            error: function (result) {
+                                Swal.fire({
+                                    text: customerName + " was not deleted.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                });
+                            }
+                        })
+                        
+                    } else if (result.dismiss === 'cancel') {
+                        Swal.fire({
+                            text: customerName + " was not deleted.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary",
+                            }
+                        });
+                    }
+                });
+            })
+        });
+    }
+
+    // Public methods
+    return {
+        init: function () {
+            initDatatable();
+            handleSearchDatatable(dt);
+            handleDeleteRows();
+            handleResetForm(dt);
+        }
+    }
+}();
+
+function ShowEdit(email){
+    $.ajax({
+        url : `/Slots/Edit?id=${email}`,
+        type : 'GET',
+        success : function(data){
+            $('#modal_edit_1').modal('show');
+            $('#inner-body-display-edit-1').html(data);
+        }
+    })
+}
+
+function ShowEdit1(data){
+    $.ajax({
+        url : `/SlotBatches/Index?id=${data}`,
+        type : 'GET',
+        success : function(data){
+            $('#modal_edit_1').modal('show');
+            $('#inner-body-display-edit-1').html(data);
+        }
+    })
+}
+
+setTimeout(() => {
+    KTDatatablesServerSide.init();
+}, 100);
+
+
+</script>
+
+
+<script>
+
+    function AddSlotBatches(){
+        $.ajax({
+            url: `/SlotBatches/Create?id=${document.getElementById("SlotId").value}`,
+            type: "GET",
+            success: function (result) {
+                $("#inner-body-display").html(result)
+            },
+            error: function (xhr, status, error) {
+                alert(error)
+            }
+        })
+    }
+
+
+</script>

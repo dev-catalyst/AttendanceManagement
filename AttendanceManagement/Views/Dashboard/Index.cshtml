@@ -1,0 +1,262 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+<div class="container-xxl" id="kt_content_container">
+<div class="row g-5 gx-xxl-8 mb-xxl-3">
+<div class="col-xxl-4">
+    <div class="card card-xxl-stretch">
+        <div class="card-body d-flex flex-column justify-content-between h-100">
+            <div class="pt-12">
+                <h3 class="text-dark text-center fs-1 fw-boldest line-height-lg">
+                    Kickstart
+                    <br/>Attendance
+                </h3>
+                <div class="text-center text-gray-600 fs-5 fw-bold pt-4">
+                    This is secure and easy to use
+                    . stoping using sheets for attendance
+                </div>
+                <div class="text-center py-7 mb-18">
+                    <a href="#" class="btn btn-primary fs-6 px-6" data-bs-toggle="modal"
+                       data-bs-target="#kt_modal_create_app">
+                        Create App
+                    </a>
+                </div>
+            </div>
+            <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom card-rounded-bottom h-150px">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xxl-8">
+<div class="card card-xxl-stretch mb-5 mb-xxl-8">
+<div class="card-header border-0 pt-5">
+    <h3 class="card-title align-items-start flex-column">
+        <span class="card-label fw-boldest fs-3 text-dark">Authors Overview</span>
+        <span class="text-gray-400 mt-2 fw-bold fs-6">22M total income</span>
+    </h3>
+    <div class="card-toolbar">
+        <ul class="nav nav-pills">
+            <li class="nav-item me-1">
+                <a class="nav-link btn btn-active-light active btn-color-gray-400 btn-active-color-gray-700"
+                   data-kt-countup-tabs="true" data-bs-toggle="tab"
+                   href="#kt_chart_widget_1_tab_pane_1">
+                    30 Days
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-active-light btn-color-gray-400 btn-active-color-gray-700"
+                   data-kt-countup-tabs="true" data-bs-toggle="tab"
+                   href="#kt_chart_widget_1_tab_pane_2">
+                    Sep 2020
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-active-light btn-color-gray-400 btn-active-color-gray-700"
+                   data-kt-countup-tabs="true" data-bs-toggle="tab"
+                   href="#kt_chart_widget_1_tab_pane_3">
+                    Oct 2020
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-active-light btn-color-gray-400 btn-active-color-gray-700"
+                   data-kt-countup-tabs="true" data-bs-toggle="tab"
+                   href="#kt_chart_widget_1_tab_pane_4">
+                    More
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="card-body p-0">
+    <div class="tab-content pt-10">
+        <div class="tab-pane fade active show" id="kt_chart_widget_1_tab_pane_1">
+            <div class="row p-0 px-9">
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">User Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="3899">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Admin Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true" data-kt-countup-value="72">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Author Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="291">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Failed Attempts</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true" data-kt-countup-value="6">
+                            0
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 mt-7" id="kt_charts_widget_1_chart_1"
+                 style="height: 350px">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="kt_chart_widget_1_tab_pane_2">
+            <div class="row p-0 px-9">
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">User Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="2472">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Admin Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true" data-kt-countup-value="34">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Author Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="419">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Failed Attempts</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true" data-kt-countup-value="12">
+                            0
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 mt-7" id="kt_charts_widget_1_chart_2"
+                 style="height: 350px">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="kt_chart_widget_1_tab_pane_3">
+            <div class="row p-0 px-9">
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">User Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="2917">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Admin Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="102">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Author Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="219">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Failed Attempts</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true" data-kt-countup-value="15">
+                            0
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 mt-7" id="kt_charts_widget_1_chart_3"
+                 style="height: 350px">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="kt_chart_widget_1_tab_pane_4">
+            <div class="row p-0 px-9">
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">User Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="7392">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Admin Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true" data-kt-countup-value="23">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Author Sign-in</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true"
+                              data-kt-countup-value="418">
+                            0
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="border border-dashed border-gray-300 text-center min-w-125px rounded pt-6 pb-4 my-3">
+                        <span class="fs-4 fw-bold text-gray-400 d-block">Failed Attempts</span>
+                        <span class="fs-2x fw-boldest text-gray-800"
+                              data-kt-countup="true" data-kt-countup-value="11">
+                            0
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 mt-7" id="kt_charts_widget_1_chart_4"
+                 style="height: 350px">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>

@@ -1,0 +1,15 @@
+﻿@model AttendanceManagement.Models.ViewModel.PageCardHeading
+<div class="card-header pt-10 page-header-card">
+    <div class="d-flex align-items-center">
+        <div class="symbol symbol-circle me-5">
+            <div class="symbol-label bg-transparent text-primary border border-secondary border-dashed">
+                <span class="svg-icon svg-icon-2x svg-icon-primary">
+                    <partial name="@Model.Icon"/>
+                </span>
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <h2 class="mb-1">@Model.Heading</h2>
+        </div>
+    </div>
+</div>

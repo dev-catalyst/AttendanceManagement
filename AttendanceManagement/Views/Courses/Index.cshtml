@@ -1,0 +1,222 @@
+@using AttendanceManagement.Models.ViewModel
+@model IEnumerable<AttendanceManagement.Models.TimeTable.Course>
+
+@{
+    ViewData["Title"] = "Courses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageCardHeading pageCardHeading = new PageCardHeading
+    {
+        Heading = "Courses",
+        Icon = "Icons/_CourseIcon"
+    };
+}
+
+            <partial name="Common/_PageCardHeading" model="pageCardHeading"/>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+
+        <div class="card">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        @Html.Partial("Common/_SearchTextBox", "Course")
+                        <partial name="Common/_TableReload"/>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+                        <partial name="Common/_ExportButton"/>
+                        <button type="button" class="btn btn-primary" onclick="AddCourse()" data-bs-toggle="modal" data-bs-target="#modal_add_1">
+                            Add Course
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0" id="TableContainer">
+                <table id="CustomDataTable" class="table align-middle table-row-dashed fs-6 gy-5">
+                    <thead>
+                    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Semester</th>
+                        <th>Department</th>
+                        <th class="text-end min-w-100px">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-gray-600 fw-bold">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script defer>
+var KTDatatablesServerSide = function () {
+    // Shared variables
+    var table;
+    var dt;
+
+    // Private functions
+    var initDatatable = function () {
+        const columns = [{ data: 'code'},{ data: 'name'},{ data: 'description'}, { data: 'semester'}, { data: 'department'}, { data: 'id' }]
+        const columnsDefs = [
+                            {
+                                targets: [1],
+                                render: function (data, type, full, meta) {
+                                    return `<a href="/Courses/Details/${full.id}" class="table-link">${data}</a>`;
+                                },
+                            },
+                            {
+                                targets: 4,
+                                render: function (data) {
+                                    return `<a href="/Departments/Details/${data.id}" class="table-link">${data.name}</a>`;
+                                },
+                            },
+                            {
+                                targets: -1,
+                                data: null,
+                                orderable: false,
+                                className: 'text-end',
+                                render: function (data, type, row) {
+                                    try{
+                                        return GenerateActionButton(data);
+                                    }
+                                    catch (e) {
+                                        return "-";
+                                    }
+                                },
+                            },
+                        ]
+        dt = GenerateDataTable("#CustomDataTable", "/Courses/PageData", columns, columnsDefs);
+
+        table = dt.$;
+
+        // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+        dt.on('draw', function () {
+            handleDeleteRows();
+            KTMenu.createInstances();
+        });
+    }
+
+    var handleDeleteRows = () => {
+        // Select all delete buttons
+        const deleteButtons = document.querySelectorAll('[data-kt-docs-table-filter="delete_row"]');
+
+        deleteButtons.forEach(d => {
+            // Delete button on click
+            d.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Select parent row
+                const parent = e.target.closest('tr');
+
+                // Get customer name
+                const customerName = parent.querySelectorAll('td')[1].innerText;
+
+                // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                Swal.fire({
+                    text: "Are you sure you want to remove " + customerName + " Course?",
+                    icon: "error",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes, delete!",
+                    cancelButtonText: "No, cancel",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-active-light-primary"
+                    }
+                }).then(function (result) {
+                    if (result.value) {
+                        const dataSelect = parent.querySelectorAll('td')[5].querySelectorAll('a')[0].id
+                        $.ajax({
+                            url: `/Courses/Delete`,
+                            data: {
+                                id: dataSelect
+                            },
+                            type : "Delete",
+                            success: function (result) {
+                                if (result) {
+                                     dt.row(parent).remove().draw();                                    
+                                }
+                            },
+                            error: function (result) {
+                                
+                                Swal.fire({
+                                    text: customerName + " was not deleted.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                });
+                            }
+                        })
+                        
+                    } else if (result.dismiss === 'cancel') {
+                        Swal.fire({
+                            text: customerName + " was not deleted.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary",
+                            }
+                        });
+                    }
+                });
+            })
+        });
+    }
+
+    // Public methods
+    return {
+        init: function () {
+            initDatatable();
+            handleSearchDatatable(dt);
+            handleDeleteRows();
+            handleResetForm(dt);
+            exportButtons(dt);
+        }
+    }
+}();
+
+function ShowEdit(email){
+    $.ajax({
+        url : `/Courses/Edit?id=${email}`,
+        type : 'GET',
+        success : function(data){
+            $('#modal_edit_1').modal('show');
+            $('#inner-body-display-edit-1').html(data);
+        }
+    })
+}
+
+setTimeout(() => {
+    KTDatatablesServerSide.init();
+}, 100);
+
+
+</script>
+<script>
+
+    function AddCourse(){
+        $.ajax({
+            url: "/Courses/Create",
+            type: "GET",
+            success: function (result) {
+                $("#inner-body-display").html(result)
+                
+            },
+            error: function (xhr, status, error) {
+                alert(error);
+            }
+        })
+    }
+
+
+</script>

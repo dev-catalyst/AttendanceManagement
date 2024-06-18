@@ -1,0 +1,236 @@
+﻿@using AttendanceManagement.Models.ViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+    PageCardHeading pageCardHeading = new PageCardHeading
+    {
+        Heading = "Dashboard",
+        Icon = "Icons/_DashboardIcon"
+    };
+}
+
+            <partial name="Common/_PageCardHeading" model="pageCardHeading"/>
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+        <div class="row g-5 gx-xxl-8 mb-xxl-3 justify-content-center">
+            @{
+                if ((ViewBag.User.EnrollmentNumber == null || ViewBag.User.EnrollmentNumber == "") && ViewBag.Role == "Student")
+                {
+                    <div class="col-xxl-4 col-md-4">
+                        <form asp-action="AddEnrollment" id="AddEnrollment" class="card card-xxl-stretch">
+                            <div class="card-body d-flex flex-column justify-content-between h-100">
+                                <div class="pt-12">
+                                    <h3 class="text-dark text-center fs-1 fw-boldest line-height-lg">
+                                        Enter
+                                        <br/>Enrollment Number
+                                    </h3>
+                                    <div class="text-center text-gray-600 fs-5 fw-bold pt-4">
+                                        <input name="EnrollmentNumber" type="text" class="form-control-solid form-control"/>
+                                    </div>
+                                    <div class="text-center py-7 mb-10">
+                                        <button type="submit" class="btn btn-primary fs-6 px-6" data-bs-toggle="modal"
+                                                data-bs-target="#kt_modal_create_app">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                }
+            }
+            @{
+                if (ViewBag.Batches != null && ViewBag.Role == "Student" && (ViewBag.User.EnrollmentNumber != null || ViewBag.User.EnrollmentNumber != ""))
+                {
+                    <div class="col-xxl-4 col-md-4">
+                        <form asp-action="AddBatch" id="AddBatch" class="card card-xxl-stretch">
+                            <div class="card-body d-flex flex-column justify-content-between h-100">
+                                <div class="pt-12">
+                                    <h5 class="text-dark text-center fs-4 fw-boldest line-height-lg">
+                                        Select Your Batches
+                                    </h5>
+                                    <div class="text-center text-gray-600 fs-5 fw-bold pt-4">
+                                        @{
+                                            foreach (var batch in ViewBag.Batches)
+                                            {
+                                                <div class="form-check form-switch ms-2 my-3 w-md-50">
+                                                    <input class="form-check-input" type="checkbox" name="@batch.Id" role="switch" id="@batch.Id">
+                                                    <label class="form-check-label" for="@batch.Id">@batch.Name</label>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="text-center py-7">
+                                        <button type="submit" class="btn btn-primary fs-6 px-6" data-bs-toggle="modal"
+                                                data-bs-target="#kt_modal_create_app">
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                }
+                if (ViewBag.Role == "Faculty")
+                {
+                    <div class="col-xxl-4">
+                        <div class="card card-xxl-stretch">
+                            <div class="card-body d-flex flex-column justify-content-between h-100">
+                                <div class="pt-12">
+                                    <h3 class="text-dark text-center fs-1 fw-boldest line-height-lg">
+                                        Kickstart
+                                        <br/>Attendance
+                                    </h3>
+                                    <div class="text-center text-gray-600 fs-5 fw-bold pt-4">
+                                        This is secure and easy to use. don't trust me, try it
+                                    </div>
+                                    <div class="text-center py-7 mb-10">
+                                        <a href="/Teachers" class="btn btn-primary fs-6 px-6" data-bs-toggle="modal"
+                                           data-bs-target="#kt_modal_create_app">
+                                            Create Attendance
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom card-rounded-bottom h-150px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header border-0 pt-6 pb-6">
+                            <div class="card-title">
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <h2 class="mb-1">Today's (@DateTime.Today.DayOfWeek) Lectures</h2>
+                                </div>
+                            </div>
+                            <div class="card-toolbar">
+                            </div>
+                        </div>
+                        <div class="card-body pt-0 row justify-content-center">
+                            @{
+                                foreach (var lecture in ViewBag.TodayFacultySlots)
+                                {
+                                    string startTime = lecture.StartTime.ToString("h:mm tt");
+                                    string endTime = lecture.EndTime.ToString("h:mm tt");
+                                    <div class="card col-md-3 shadow-sm mx-md-3">
+                                        <div class="my-3 pt-3 text-center h4">
+                                            @lecture.Course.Name
+                                            <span class="text-muted fw-normal fs-5 d-block my-3">
+                                                @lecture.Teacher.User.FirstName @lecture.Teacher.User.LastName
+                                            </span>
+                                        </div>
+                                        <div class="my-2 h6 text-center">
+                                            @startTime - @endTime
+                                            <span class="text-muted fw-normal fs-5 d-block my-3 pb-2">
+                                                @lecture.Room.Name
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+                if (ViewBag.Role == "Student")
+                {
+                    <div class="col-xxl-4">
+                        <div class="card card-xxl-stretch">
+                            <div class="card-body d-flex flex-column justify-content-between h-100">
+                                <div class="pt-12">
+                                    <h3 class="text-dark text-center fs-1 fw-boldest line-height-lg">
+                                        Get Your
+                                        <br/>Attendance
+                                    </h3>
+                                    <div class="text-center py-7 mb-10">
+                                        <a href="/TimeTable" class="btn btn-primary fs-6 px-6" data-bs-toggle="modal"
+                                           data-bs-target="#kt_modal_create_app">
+                                            Scan QR Code
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom card-rounded-bottom h-150px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                if (ViewBag.Role == "Admin")
+                {
+                    var adminDashboardLinks = new List<DashboardCard>()
+                    {
+                        new DashboardCard("Teachers Management", "/Teachers", "Icons/_TeacherIcon"),
+                        new DashboardCard("Departments Management", "/Departments", "Icons/_DepartmentIcon"),
+                        new DashboardCard("Courses Management", "/Courses", "Icons/_CourseIcon"),
+                        new DashboardCard("Batches Management", "/Batches", "Icons/_BatchIcon"),
+                        new DashboardCard("Slots Management", "/Slots", "Icons/_SlotIcon"),
+                        new DashboardCard("Users Management", "/App/Users", "Icons/_UserIcon"),
+                        new DashboardCard("Tracking", "/Visitors", "Icons/_VisitorIcon"),
+                        new DashboardCard("Rooms Management", "/Rooms", "Icons/_RoomIcon"),
+                        new DashboardCard("TimeTable Viewer", "/TimeTable", "Icons/_TimetableIcon")
+                    };
+
+                    foreach (var links in adminDashboardLinks)
+                    {
+                        <partial name="Common/_DashboardCard" model="links"/>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+<script>
+(function(){
+    const AddEnrollment = document.getElementById('AddEnrollment');
+    AddEnrollment.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(AddEnrollment);
+        const response = await fetch(AddEnrollment.action, {
+            method: AddEnrollment.method,
+            body: formData
+        });
+        const data = response.status;
+        console.log(data);
+        if (data == 200) {
+            window.location.reload();
+        }
+    });
+    
+    const AddBatch = document.getElementById('AddBatch');
+    AddBatch.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(AddBatch);
+        const CustomData = Object.fromEntries(formData);
+        delete CustomData.__RequestVerificationToken;
+        let newData = {}
+        newData.content = Object.keys(CustomData)
+        console.log(newData);
+        $.ajax({
+            url: AddBatch.action,
+            type: "POST",
+            data: newData,
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                toastr.options.closeButton = true;
+                toastr.options.closeMethod = 'fadeOut';
+                toastr.options.closeDuration = 0;
+                toastr.options.showMethod = 'fadeIn';
+                toastr.options.hideMethod = 'fadeOut';
+                toastr.options.progressBar = true;
+                toastr.options.showEasing = 'swing';
+                toastr.options.hideEasing = 'swing';
+                toastr.options.duration = 500;
+                toastr.options.dublicateAllow = false;
+                toastr.error("Something went wrong", "Error", { timeOut: 1500 })
+            }
+        })
+        
+    });
+    
+})();
+</script>

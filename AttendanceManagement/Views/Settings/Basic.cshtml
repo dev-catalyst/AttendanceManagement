@@ -1,0 +1,101 @@
+﻿@model ApplicationUser
+@{
+    ViewBag.Title = "Basic";
+    Layout = "_SettingsLayout";
+}
+
+<h3 class="mt-6 mb-7 text-muted fw-bold">@ViewBag.Title</h3>
+<div class="row">
+    <div class="col-md-6">
+        <form id="settingsUpdateBasic" asp-action="UpdateBasic">
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    First Name
+                </label>
+                <input name="FirstName" type="text" value="@Model.FirstName" class="form-control-solid form-control"/>
+            </div>
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Last Name
+                </label>
+                <input name="LastName" type="text" value="@Model.LastName" class="form-control-solid form-control"/>
+            </div>
+            <div class="ms-2 my-3 user-select-none">
+                <label class="control-label form-label required d-block">
+                    Mobile Number
+                </label>
+                <input name="PhoneNumber" type="text" value="@Model.PhoneNumber" class="form-control-solid form-control"/>
+            </div>
+            @if (ViewBag.role == "Student")
+            {
+                <div class="ms-2 my-3 user-select-none">
+                    <label class="control-label form-label required d-block">
+                        Enrollment Number
+                    </label>
+                    <input name="EnrollmentNumber" type="text" value="@Model.EnrollmentNumber" class="form-control-solid form-control"/>
+                </div>
+                <div class="ms-2 my-3 user-select-none">
+                    <label class="control-label form-label required d-block">
+                        Semester
+                    </label>
+                    <input name="EnrollmentNumber" type="number" value="@Model.Semester" class="form-control-solid form-control"/>
+                </div>
+            }
+            <div class="form-group mt-5 pt-3">
+                <button type="submit" class="btn btn-primary">
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path opacity="0.3" d="M3 13V11C3 10.4 3.4 10 4 10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14H4C3.4 14 3 13.6 3 13Z" fill="black"/>
+                            <path d="M13 21H11C10.4 21 10 20.6 10 20V4C10 3.4 10.4 3 11 3H13C13.6 3 14 3.4 14 4V20C14 20.6 13.6 21 13 21Z" fill="black"/>
+                        </svg>
+                    </span>
+                    Update Profile
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script defer>
+
+(function(){
+    const settingsUpdateBasic = document.getElementById('settingsUpdateBasic');
+    settingsUpdateBasic.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(settingsUpdateBasic);
+        const CustomData = Object.fromEntries(formData);
+        console.log(CustomData);
+        $.ajax({
+            url: settingsUpdateBasic.action,
+            type: "POST",
+            data: CustomData,
+            success: function (result) {
+                toastr.options.closeButton = true;
+                toastr.options.closeMethod = 'fadeOut';
+                toastr.options.closeDuration = 0;
+                toastr.options.showMethod = 'fadeIn';
+                toastr.options.hideMethod = 'fadeOut';
+                toastr.options.progressBar = true;
+                toastr.options.showEasing = 'swing';
+                toastr.options.hideEasing = 'swing';
+                toastr.options.duration = 500;
+                toastr.options.dublicateAllow = false;
+                toastr.success("Details Updated", "Updated", { timeOut: 1500 })
+            },
+            error: function (xhr, status, error) {
+                toastr.options.closeButton = true;
+                toastr.options.closeMethod = 'fadeOut';
+                toastr.options.closeDuration = 0;
+                toastr.options.showMethod = 'fadeIn';
+                toastr.options.hideMethod = 'fadeOut';
+                toastr.options.progressBar = true;
+                toastr.options.showEasing = 'swing';
+                toastr.options.hideEasing = 'swing';
+                toastr.options.duration = 500;
+                toastr.options.dublicateAllow = false;
+                toastr.error("Something went wrong", "Error", { timeOut: 1500 })
+            }
+        })
+    });
+})();
+</script>

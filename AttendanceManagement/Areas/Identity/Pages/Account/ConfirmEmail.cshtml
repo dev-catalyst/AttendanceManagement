@@ -1,0 +1,13 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Email Confirmed";
+}
+
+<h4>@ViewData["Title"]</h4>
+<label class="form-label mt-5">Your Email Has Been Confirmed</label>
+
+<partial name="_StatusMessage" model="Model.StatusMessage"/>
+<a class="btn btn-primary" href="/">
+    Login
+</a>

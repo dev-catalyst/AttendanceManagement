@@ -1,0 +1,115 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    var departments = (SelectList)ViewData["Departments"];
+}
+<form class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework" id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" onsubmit="showLoadingPage()">
+    <!--begin::Heading-->
+    <div class="mb-10 text-center">
+        <!--begin::Title-->
+        <h1 class="text-dark mb-3">Create an Account</h1>
+        <!--end::Title-->
+        <!--begin::Link-->
+        <div class="text-gray-400 fw-bold fs-4">
+            Already have an account?
+            <a href="/Identity/Account/Login" class="link-primary fw-bolder">Sign in here</a>
+        </div>
+        <!--end::Link-->
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row fv-row mb-7 fv-plugins-icon-container">
+        <!--begin::Col-->
+        <div class="col-xl-6">
+            <label class="form-label fw-bolder text-dark fs-6 required">First Name</label>
+            <input class="form-control form-control-lg form-control-solid" placeholder="" type="text" required="required" name="FirstName" autocomplete="off">
+
+            <div class="fv-plugins-message-container invalid-feedback"></div>
+        </div>
+        <!--end::Col-->
+        <!--begin::Col-->
+        <div class="col-xl-6">
+            <label class="form-label fw-bolder text-dark fs-6 required ">Last Name</label>
+            <input class="form-control form-control-lg form-control-solid" placeholder="" type="text" required="required" name="LastName" autocomplete="off">
+
+            <div class="fv-plugins-message-container invalid-feedback"></div>
+        </div>
+        <!--end::Col-->
+    </div>
+    <div class="fv-row mb-7 fv-plugins-icon-container">
+        <label class="form-label fw-bolder text-dark fs-6 required">Department</label>
+        <select class="form-select form-select-solid" name="DepartmentId" asp-items="@departments" data-control="select2" data-placeholder="Select your department" data-allow-clear="true">
+        </select>
+        <div class="fv-plugins-message-container invalid-feedback"></div>
+    </div>
+    <div class="fv-row mb-7 fv-plugins-icon-container">
+        <label class="form-label fw-bolder text-dark fs-6 required">Semester</label>
+        <input class="form-control form-control-lg form-control-solid" placeholder="" type="number" name="Semester" autocomplete="off">
+        <div class="fv-plugins-message-container invalid-feedback"></div>
+    </div>
+    <div class="fv-row mb-7 fv-plugins-icon-container">
+        <label class="form-label fw-bolder text-dark fs-6 required">Email</label>
+        <input class="form-control form-control-lg form-control-solid" placeholder="" asp-for="Input.Email" autocomplete="off">
+        <div class="fv-plugins-message-container invalid-feedback"></div>
+    </div>
+    <!--end::Input group-->
+    <!--begin::Input group-->
+    <div class="mb-10 fv-row fv-plugins-icon-container" data-kt-password-meter="true">
+        <!--begin::Wrapper-->
+        <div class="mb-1">
+            <!--begin::Label-->
+            <label class="form-label fw-bolder text-dark fs-6 required">Password</label>
+            <!--end::Label-->
+            <!--begin::Input wrapper-->
+            <div class="position-relative mb-3">
+                <input class="form-control form-control-lg form-control-solid" type="password" placeholder="" asp-for="Input.Password" autocomplete="off">
+            </div>
+
+        </div>
+        <!--end::Wrapper-->
+        <!--begin::Hint-->
+        <div class="text-muted">Use 8 or more characters with a mix of letters, numbers &amp; symbols.</div>
+        <!--end::Hint-->
+        <div class="fv-plugins-message-container invalid-feedback"></div>
+    </div>
+    <!--end::Input group=-->
+    <!--begin::Input group-->
+    <div class="fv-row mb-5 fv-plugins-icon-container">
+        <label class="form-label fw-bolder text-dark fs-6 required">Confirm Password</label>
+        <input class="form-control form-control-lg form-control-solid" placeholder="" asp-for="Input.ConfirmPassword" autocomplete="off">
+        <div class="fv-plugins-message-container invalid-feedback"></div>
+    </div>
+    <!--end::Input group-->
+    <!--begin::Input group-->
+    <div class="fv-row mb-10 fv-plugins-icon-container">
+        <label class="form-check form-check-custom form-check-solid mb-5">
+            <input class="form-check-input" type="checkbox" name="toc" value="1">
+            <span class="form-check-label fw-bold text-gray-700 fs-6">
+                I Agree &amp;
+                <a href="javascript:void(0)" class="ms-1 link-primary">Terms and conditions</a>.
+            </span>
+        </label>
+        <div class="fv-plugins-message-container invalid-feedback"></div>
+    </div>
+    <!--end::Input group-->
+    <!--begin::Actions-->
+    <div class="text-center">
+        <button type="submit" id="registerSubmit" class="btn btn-lg btn-primary">
+            <span class="indicator-label">Submit</span>
+            <span class="indicator-progress">
+                Please wait...
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+            </span>
+        </button>
+    </div>
+    <!--end::Actions-->
+    <div></div>
+</form>
+
+<script>
+function showLoadingPage(){
+ document.getElementById("kt_sign_in_submit").setAttribute("data-kt-indicator", "on");
+    }
+</script>

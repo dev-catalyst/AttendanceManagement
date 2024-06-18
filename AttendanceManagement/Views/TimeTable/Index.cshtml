@@ -1,0 +1,203 @@
+﻿@using AttendanceManagement.Models.TimeTable
+@using AttendanceManagement.Models.ViewModel
+@{
+    ViewBag.Title = "TimeTable";
+    Layout = "_Layout";
+
+    string FindDayOfTheWeek(int day)
+    {
+        if (day == 1)
+            return "Monday";
+        if (day == 2)
+        {
+            return "Tuesday";
+        }
+        if (day == 3)
+        {
+            return "Wednesday";
+        }
+        if (day == 4)
+        {
+            return "Thursday";
+        }
+        if (day == 5)
+        {
+            return "Friday";
+        }
+        if (day == 6)
+        {
+            return "Saturday";
+        }
+        if (day == 7)
+        {
+            return "Sunday";
+        }
+        return "Invalid Day";
+    }
+
+    PageCardHeading pageCardHeading = new PageCardHeading()
+    {
+        Heading = "TimeTable",
+        Icon = "Icons/_TimetableIcon"
+    };
+
+}
+
+<partial name="Common/_PageCardHeading" model="pageCardHeading"/>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+
+        <div class="card card-flush pb-0 bgi-position-y-center bgi-no-repeat mb-10">
+            <div class="card-body pb-0">
+                <div class="d-flex flex-column">
+                    <h6 class="mb-1">Batches</h6>
+                </div>
+                <div class="d-flex overflow-auto h-55px">
+                    <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold flex-nowrap">
+                        @{
+                            foreach (var batch in ViewBag.allBatches)
+                            {
+                                var extraClass = "";
+                                if (batch.Id == ViewBag.Id)
+                                {
+                                    extraClass = "active";
+                                }
+                                <li class="nav-item user-select-none">
+                                    <a class="nav-link text-active-primary me-6 @extraClass" href="/TimeTable?id=@batch.Id">@batch.Name</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body pb-0">
+                <div class="d-flex flex-column">
+                    <h6 class="mb-1">Teachers</h6>
+                </div>
+                <div class="d-flex overflow-auto h-55px">
+                    <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold flex-nowrap">
+                        @{
+                            foreach (var teacher in ViewBag.allTeachers)
+                            {
+                                var extraClass = "";
+                                if (teacher.Id == ViewBag.Id)
+                                {
+                                    extraClass = "active";
+                                }
+                                <li class="nav-item user-select-none">
+                                    <a class="nav-link text-active-primary me-6 @extraClass" href="/TimeTable?teacher=@teacher.Id">@teacher.User.FirstName @teacher.User.LastName</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body pb-0">
+                <div class="d-flex flex-column">
+                    <h6 class="mb-1">Rooms</h6>
+                </div>
+                <div class="d-flex overflow-auto h-55px">
+                    <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold flex-nowrap">
+                        @{
+                            foreach (var room in ViewBag.allRooms)
+                            {
+                                var extraClass = "";
+                                if (room.Id == ViewBag.Id)
+                                {
+                                    extraClass = "active";
+                                }
+                                <li class="nav-item user-select-none">
+                                    <a class="nav-link text-active-primary me-6 @extraClass" href="/TimeTable?room=@room.Id">@room.Name</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @{
+            if (ViewBag.batchId != null)
+            {
+                <div class="card">
+                    <div class="card-header border-0 pt-6 pb-6">
+                        <div class="card-title">
+                            <div class="d-flex align-items-center position-relative my-1">
+                                <h2 class="mb-1">Today's (@DateTime.Today.DayOfWeek) Lectures</h2>
+                            </div>
+                        </div>
+                        <div class="card-toolbar">
+                        </div>
+                    </div>
+                    <div class="card-body pt-0 row justify-content-center">
+                        @{
+                            foreach (var lecture in ViewBag.todayLectures)
+                            {
+                                string startTime = lecture.StartTime.ToString("h:mm tt");
+                                string endTime = lecture.EndTime.ToString("h:mm tt");
+                                <div class="card col-md-3 shadow-sm mx-md-3 my-5">
+                                    <div class="my-3 pt-3 text-center h4">
+                                        @lecture.Course.Name
+                                        <span class="text-muted fw-normal fs-5 d-block my-3">
+                                            @lecture.Teacher.User.FirstName @lecture.Teacher.User.LastName
+                                        </span>
+                                    </div>
+                                    <div class="my-2 h6 text-center">
+                                        @startTime - @endTime
+                                        <span class="text-muted fw-normal fs-5 d-block my-3 pb-2">
+                                            @lecture.Room.Name
+                                        </span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+            if (ViewBag.slots != null)
+            {
+                for (var i = 1; i <= 7; i++)
+                {
+                    List<Slot> slots = ViewBag.slots;
+                    <div class="card mb-5">
+                        <div class="card-header border-0 pt-6 pb-6">
+                            <div class="card-title">
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <h2 class="mb-1">@FindDayOfTheWeek(i) Lectures</h2>
+                                </div>
+                            </div>
+                            <div class="card-toolbar">
+                            </div>
+                        </div>
+                        <div class="card-body pt-0 row justify-content-center">
+                            @{
+                                foreach (var lecture in slots.Where(x => x.Day == i))
+                                {
+                                    string startTime = lecture.StartTime.ToString("h:mm tt");
+                                    string endTime = lecture.EndTime.ToString("h:mm tt");
+                                    <div class="card col-md-3 shadow-sm mx-md-3 my-5">
+                                        <div class="my-3 pt-3 text-center h4">
+                                            @lecture.Course.Name
+                                            <span class="text-muted fw-normal fs-5 d-block my-3">
+                                                @lecture.Teacher.User.FirstName @lecture.Teacher.User.LastName
+                                            </span>
+                                        </div>
+                                        <div class="my-2 h6 text-center">
+                                            @startTime - @endTime
+                                            <span class="text-muted fw-normal fs-5 d-block my-3 pb-2">
+                                                @lecture.Room.Name
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            }
+
+        }
+    </div>
+</div>
